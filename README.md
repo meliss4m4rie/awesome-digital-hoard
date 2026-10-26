@@ -1,7 +1,6 @@
-# Awesome Retro Web & Digital Assets [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+# Awesome Digital Hoard
 
 > A curated list of awesome retro Y2K pixel art assets, indie web tools, hand-coded layouts, and local-first utilities.<br>List is still currently under construction!
-
 ## Contents
 
 - [Pixel Art & Assets](#pixel-art--assets)
