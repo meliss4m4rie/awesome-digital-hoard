@@ -1,0 +1,42 @@
+name: Refresh Starred Repos
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Runs every Monday at midnight UTC
+  workflow_dispatch: # Allows manual trigger from the GitHub web UI
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-stars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Star Fetcher Script
+        run: |
+          python scripts/fetch_stars.py
+
+      - name: Check for modifications
+        id: git-check
+        run: |
+          git diff --quiet || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: steps.git-check.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: auto-update starred-repos.md"
+          title: "🔄 Update Starred Repositories List"
+          body: "Automated PR: New or removed starred repositories detected. Please review changes before merging."
+          branch: auto-update-starred-repos
+          delete-branch: true
