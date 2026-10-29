@@ -5,6 +5,10 @@ import json
 USERNAME = "meliss4m4rie"
 API_URL = f"https://api.github.com/users/{USERNAME}/starred?per_page=100"
 
+# Target path on your D drive
+TARGET_DIR = r"D:\.NOCTURNE-VAULT\codex\github"
+TARGET_FILE = os.path.join(TARGET_DIR, "starred-repos.md")
+
 def get_starred_repos():
     req = urllib.request.Request(
         API_URL,
@@ -19,7 +23,7 @@ def get_starred_repos():
         return []
 
 def update_markdown(repos):
-    md_content = "# ⭐ Starred Repositories\n\nAutomated list of starred GitHub repositories.\n\n"
+    md_content = "# ⭐ Starred Repositories\n\nAutomated list of starred GitHub repositories for Nocturne Vault.\n\n"
     
     for repo in repos:
         name = repo.get("full_name")
@@ -28,9 +32,12 @@ def update_markdown(repos):
         
         md_content += f"* **[{name}]({html_url})** - {description}\n"
 
-    with open("starred-repos.md", "w", encoding="utf-8") as f:
+    # Ensure the directory exists
+    os.makedirs(TARGET_DIR, exist_ok=True)
+
+    with open(TARGET_FILE, "w", encoding="utf-8") as f:
         f.write(md_content)
-    print("Successfully updated starred-repos.md!")
+    print(f"Successfully updated {TARGET_FILE}!")
 
 if __name__ == "__main__":
     repos = get_starred_repos()
